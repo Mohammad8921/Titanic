@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath, amssymb}
+\usepackage{xepersian}
+\settextfont{Yas}
+\setmathdigitfont{Yas}
+\deflatinfont\Consolas{Consolas}
+\linespread{1.2}
+\title{گزارش کار بخش پیاده سازی تمرین دوم درس یادگیری ماشین}
+\author{محمد لشکری}
+\begin{document}
+	\maketitle
+مجموعه متغیر‌های مستقل و وابسته به صورت زیر انتخاب شده‌اند:
+\lr{
+\begin{description}
+	\item
+	{\Consolas 	X = \{Pclass, Sex, Age, SibSp, Parch, Fare, Embarked\}}
+	\item
+	{\Consolas Y = \{Survived\}}
+\end{description}
+}
+همانطور که مشاهده می‌شود بعضی از ویژگی‌ها مانند شناسه مسافر و بلیت و کابین به دلیل یکتا بودن مقادیر حذف شده‌اند.
+\section{پیش پردازش داده‌ها}\label{preprocessing}
+با استفاده از
+{\Consolas KNNImpuer}
+با در نظر گرفتن ۲۰ همسایه مقادیر گمشده در ویژگی های سن و کرایه بلیت جایگزین شده‌اند. ویژگی های جنسیت و 
+{\Consolas Embarked}
+به نوع عددی تغییر پیدا کردند. نسبت دادن بازه به داده در ویژگی‌های سن و کرایه بلیت باعث حذف اطلاعات از دادگان می‌شود اما چون دامنه این متغیر‌ها گسترده است با استفاده از مقیاس کننده استاندارد آنها را مقیاس کرده‌ایم تا عددی در بازه 
+$\left[-3,3\right]$
+اختیار کنند. لازم یه ذکر است منفی شدن اعداد در نتیجه تأثیر ندارد.
+\section{مدل‌سازی}\label{modeling}
+قبل از فرایند مدل‌سازی، دادگان آموزش به دو بخش آموزش و تست با نسبت ۰/۲ تقسیم  شدند. سه الگوریتم زیر روی دادگان اموزش دیده‌اند:
+\lr{
+\begin{itemize}
+	\item Support Vector Machine (SVM)
+	\item Logistic Regression (LR)
+	\item Gaussian Naïve bayes (GNB)
+\end{itemize}
+}
+که درآن کرنل
+ \lr{SVM}
+ 	خطی است.
+نتایج زیر با استفاده از 
+	\lr{cross validation}
+	با تعداد ۵ فلدر به دست آمده است:
+\begin{latin}
+	\begin{table}[h]
+		\parbox{\linewidth}{
+		\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& precision(macro ave.)&precision of class 0(Test set)& precision of class 1(Test set)\\
+			\hline
+			SVM & 0.78 & 0.84 & 0.70\\
+			LR & 0.79 & 0.87 & 0.74\\
+			GNB & 0.78 & 0.78 & 0.77\\
+			\hline
+		\end{tabular}
+		\end{center}
+		}
+		\parbox{\linewidth}{
+		\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+		\hline
+		& recall(macro ave.) & recall f class 0(Test set) & recall of class 1(Test set)\\
+		\hline
+		SVM & 0.76 & 0.80 & 0.75\\
+		LR & 0.77 & 0.83 & 0.80\\
+		GNB & 0.78 & 0.83 & 0.71\\
+		\hline
+		\end{tabular}
+		\end{center}
+		}
+		\parbox{\linewidth}{
+		\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+		\hline
+		& f1-score(macro ave.) & f1-score of class 0(Test set) & f1-score of class 1(Test set)\\
+		\hline
+		SVM & 0.77 & 0.82 & 0.73 \\
+		LR & 0.78 & 0.85 & 0.77 \\
+		GNB & 0.78 & 0.80 & 0.74 \\
+		\hline
+		\end{tabular}
+		\end{center}
+		}
+		\parbox{0.1\linewidth}{
+		\begin{center}
+			\begin{tabular}{|c|c|c|}
+				\hline
+				& accuracy(CV)& accuracy(Test set) \\
+				\hline
+				SVM & 0.79 & 0.78\\
+				LR & 0.80  & 0.82\\
+				GNB & 0.79 & 0.78\\
+				\hline
+			\end{tabular}
+		\end{center}			
+		}
+	\end{table}
+\end{latin}
+
+پیش بینی درست زنده ماندن یا نماندن افراد در این مسأله اهمیت بیشتری دارد. پس مدلی که بالاترین مقدار \lr{precision} را دارد بهتر است. همانطور که مشاهده می‌شود مقدار این کمیت برای 
+\lr{CV}
+ در مدل
+\lr{LR}
+بالاتر است و برای داده‌های تست نیز نزدیک به سایرین است. همچنین دقت عمومی  
+\lr{(accuracy)}
+برای این مدل بالاتر از مدل‌های دیگر است. پس این مدل، از دو مدل دیگر عملکرد بهتری داشته است. در فایل کد مجموعه دادگان موجود در 
+\lr{test.csv}
+با 
+\lr{\Consolas X\textunderscore submission}
+نمایش داده شده و نتایج مربوط به آن، در فایل 
+\lr{gender\textunderscore submission.csv}
+قرار گرفته است.
+\end{document}	
